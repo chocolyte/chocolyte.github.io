@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="JVM,">
 
 
 
@@ -80,6 +80,7 @@
 
 
 <meta name="description" content="垃圾收集概念GC 需要做 3 件事情：  分配内存，为每个新建的对象分配空间 确保还在使用的对象的内存一直还在，不能把有用的空间当垃圾回收了 释放不再使用的对象所占用的空间我们把还被 GC Roots 引用的对象称为活的，把不再被引用的对象认为是死的，也就是我们说的垃圾，GC 的工作就是找到死的对象，回收它们占用的空间。在这里，我们总结一下 GC Roots 有哪些： 当前各线程执行方法中的局部变">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hotspot-jvm">
 <meta property="og:url" content="http://peach.ren/2019/03/29/hotspot-jvm/index.html">
@@ -93,7 +94,7 @@
 <meta property="og:image" content="https://www.javadoop.com/blogimages/jvm-memory-management/7.png">
 <meta property="og:image" content="https://www.javadoop.com/blogimages/jvm-memory-management/8.png">
 <meta property="og:image" content="http://note.youdao.com/yws/res/18836/51D70BBADA52441594797E8CD748FCA8">
-<meta property="og:updated_time" content="2019-03-29T07:34:28.009Z">
+<meta property="og:updated_time" content="2019-03-29T08:05:25.012Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hotspot-jvm">
 <meta name="twitter:description" content="垃圾收集概念GC 需要做 3 件事情：  分配内存，为每个新建的对象分配空间 确保还在使用的对象的内存一直还在，不能把有用的空间当垃圾回收了 释放不再使用的对象所占用的空间我们把还被 GC Roots 引用的对象称为活的，把不再被引用的对象认为是死的，也就是我们说的垃圾，GC 的工作就是找到死的对象，回收它们占用的空间。在这里，我们总结一下 GC Roots 有哪些： 当前各线程执行方法中的局部变">
@@ -198,6 +199,26 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -279,6 +300,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -569,6 +612,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
 
       
       
@@ -601,7 +650,7 @@
 
   
 
-
+  
 
         </div>
         
@@ -654,7 +703,25 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>
@@ -865,6 +932,23 @@
 
 
 
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c04df7c69d5761801385',
+          clientSecret: '5fb09dba6d14aa370d23a46ad1d2ffec28532c57',
+          repo: 'zeusoul.github.io',
+          owner: 'zeusoul',
+          admin: ['zeusoul'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
 
 
