@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="docker,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令 命令镜像相关镜像仓库相关 查找镜像   docker search 【条件】  12## 查询 3 颗星及以上且名字包含 mysql 的镜像docker search -f=s">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker 结合 spring boot 项目运行">
+<meta property="og:url" content="http://peach.ren/posts/26e25788.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令 命令镜像相关镜像仓库相关 查找镜像   docker search 【条件】  12## 查询 3 颗星及以上且名字包含 mysql 的镜像docker search -f=s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-19T04:04:36.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker 结合 spring boot 项目运行">
+<meta name="twitter:description" content="这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令 命令镜像相关镜像仓库相关 查找镜像   docker search 【条件】  12## 查询 3 颗星及以上且名字包含 mysql 的镜像docker search -f=s">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://peach.ren/posts/26e25788.html">
+
+
+
+
+
+  <title>docker 结合 spring boot 项目运行 | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://peach.ren/posts/26e25788.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zeusoul">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">docker 结合 spring boot 项目运行</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-19T12:04:15+08:00">
+                2019-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令</p>
+<h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><h2 id="镜像相关"><a href="#镜像相关" class="headerlink" title="镜像相关"></a>镜像相关</h2><h3 id="镜像仓库相关"><a href="#镜像仓库相关" class="headerlink" title="镜像仓库相关"></a>镜像仓库相关</h3><ol>
+<li>查找镜像</li>
+</ol>
+<blockquote>
+<p>docker search 【条件】</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">## 查询 3 颗星及以上且名字包含 mysql 的镜像</span><br><span class="line">docker search -f=stars=3 mysql</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>获取镜像</li>
+</ol>
+<blockquote>
+<p>docker pull 【仓库】:【tag】</p>
+</blockquote>
+<p>仓库格式为 [仓库url]/[用户名]/[应用名] , 除了官方仓库外的第三方仓库要指定 url, 用户名就是在对应仓库下建立的账户, 一般只有应用名的仓库代表 官方镜像, 如 ubuntu、tomcat 等, 而 tag 表示镜像的版本号, 不指定时默认为 latest。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 获取alpine Linux 的镜像</span><br><span class="line">docker pull alpine</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>推送镜像到仓库</li>
+</ol>
+<blockquote>
+<p>docker push [镜像名]:[tag]</p>
+</blockquote>
+<h3 id="本地镜像"><a href="#本地镜像" class="headerlink" title="本地镜像"></a>本地镜像</h3><ol>
+<li>查看本地镜像</li>
+</ol>
+<blockquote>
+<p>docker images</p>
+</blockquote>
+<ol start="2">
+<li>删除本地镜像</li>
+</ol>
+<blockquote>
+<p>docker rmi 【镜像名 or 镜像 id】</p>
+</blockquote>
+<ol start="3">
+<li>查看镜像详情</li>
+</ol>
+<blockquote>
+<p>docker inspect 【镜像名 or 镜像 id】</p>
+</blockquote>
+<ol start="4">
+<li>打包本地镜像，使用压缩包来完成迁移</li>
+</ol>
+<blockquote>
+<p>docker save 【镜像名】&gt;【文件路径】</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 默认为文件流输出</span><br><span class="line">docker save alpine &gt; /usr/anyesu/docker/alpine.img</span><br><span class="line"></span><br><span class="line"># 或者使用 &apos;-o&apos; 选项指定输出文件路径</span><br><span class="line">docker save -o /usr/anyesu/docker/alpine.img alpine</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>导入镜像压缩包</li>
+</ol>
+<blockquote>
+<p>docker load &lt; 【文件路径】</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 默认从标准输入读取</span><br><span class="line">ubuntu@VM-84-201-ubuntu:~$ docker load &lt; /usr/anyesu/docker/alpine.img</span><br><span class="line">3fb66f713c9f: Loading layer [==================================================&gt;]  4.221MB/4.221MB</span><br><span class="line">Loaded image: alpine:latest</span><br><span class="line"></span><br><span class="line"># 用 &apos;-i&apos; 选项指定输入文件路径</span><br><span class="line">ubuntu@VM-84-201-ubuntu:~$ docker load -i /usr/anyesu/docker/alpine.img</span><br><span class="line">Loaded image: alpine:latest</span><br><span class="line">Loaded image ID: sha256:665ffb03bfaea7d8b7472edc0a741b429267db249b1fcead457886e861eae25f</span><br><span class="line">Loaded image ID: sha256:a41a7446062d197dd4b21b38122dcc7b2399deb0750c4110925a7dd37c80f118</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>修改镜像 tag</li>
+</ol>
+<blockquote>
+<p>docker tag [ 镜像名 or 镜像 id ] [ 新镜像名 ]:[ 新 tag ]</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag a41 anyesu/alpine:1.0</span><br></pre></td></tr></table></figure>
+<h2 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h2><ol>
+<li>创建、启动容器并执行相应的命令</li>
+</ol>
+<blockquote>
+<p>docker run [ 参数 ] [ 镜像名 or 镜像 id ] [ 命令 ]</p>
+</blockquote>
+<p>run 命令常用选项：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-d</td>
+<td>后台运行容器，并返回容器 ID；不指定时，启动后开始打印日志，ctrl + c 退出命令同时会关闭容器</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>以交互模式运行容器，通常与 -t 同时使用</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>为容器重新分配一个伪输入终端，通常与 -i 同时使用</td>
+</tr>
+<tr>
+<td>–name 【name】</td>
+<td>为容器指定一个别名，不指定时随机生成</td>
+</tr>
+<tr>
+<td>-h 【name】</td>
+<td>设置容器的主机名，默认随机生成</td>
+</tr>
+<tr>
+<td>-dns 【dns】</td>
+<td>指定容器使用的 DNS 服务器，默认和宿主机一致</td>
+</tr>
+<tr>
+<td>-e 【environment】</td>
+<td>设置环境变量</td>
+</tr>
+<tr>
+<td>-cpuset=”0-2” or -cpu=”0,1,2”</td>
+<td>绑定容器到指定 CPU 运行</td>
+</tr>
+<tr>
+<td>-m 100M</td>
+<td>指定容器使用内存最大值</td>
+</tr>
+<tr>
+<td>–net bridge</td>
+<td>指定容器的网络连接类型，支持 bridge / host / none / container 四种类型</td>
+</tr>
+<tr>
+<td>-ip 【ip】</td>
+<td>为容器分配固定 ip，需要使用自定义网络</td>
+</tr>
+<tr>
+<td>–expose 8081 –expose 8082</td>
+<td>开放一个或一组端口，会覆盖镜像中开放的端口</td>
+</tr>
+<tr>
+<td>-p [宿主机端口]:[容器内端口]</td>
+<td>宿主机到容器的端口映射, 可指定宿主机的要监听的 ip, 默认为 0.0.0.0</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>注意是大写的, 宿主机随机指定一组可用的端口映射容器 expose 的所有端口</td>
+</tr>
+<tr>
+<td>-v [宿主机目录路径]:[容器内目录路径]</td>
+<td>挂载宿主机的指定目录 ( 或文件 ) 到容器内的指定目录 ( 或文件 )</td>
+</tr>
+<tr>
+<td>–add-host [主机名]:[ip]</td>
+<td>为容器 hosts 文件追加 host , 默认会在 hosts 文件最后追加内容：[主机名]:[容器ip]</td>
+</tr>
+<tr>
+<td>–volumes-from [其他容器名]</td>
+<td>将其他容器的数据卷添加到此容器</td>
+</tr>
+<tr>
+<td>–link [其他容器名]:[在该容器中的别名]</td>
+<td>添加链接到另一个容器, 在本容器 hosts 文件中加入关联容器的记录, 效果类似于 –add-host</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>单字符选项可以合并, 如 -i -t 可以合并为 -it</p>
+</blockquote>
+<ol start="2">
+<li>查看运行中的容器</li>
+</ol>
+<blockquote>
+<p>docker ps</p>
+</blockquote>
+<p>加 -a 选项可以查看所有的容器</p>
+<ol start="3">
+<li>开启/停止/重启容器</li>
+</ol>
+<blockquote>
+<h1 id="关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号"><a href="#关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号" class="headerlink" title="关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)"></a>关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)</h1><p>docker stop anyesu-container</p>
+</blockquote>
+<h1 id="强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号"><a href="#强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号" class="headerlink" title="强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)"></a>强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)</h1><p>docker kill anyesu-container</p>
+<h1 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h1><p>docker start anyesu-container</p>
+<h1 id="重启容器"><a href="#重启容器" class="headerlink" title="重启容器"></a>重启容器</h1><p>docker restart anyesu-container</p>
+<ol start="4">
+<li>删除容器</li>
+</ol>
+<blockquote>
+<p>docker rm [ 容器名 or 容器 id ]</p>
+</blockquote>
+<ol start="5">
+<li>查看容器详情</li>
+</ol>
+<blockquote>
+<p>docker inspect [ 容器名 or 容器 id ]</p>
+</blockquote>
+<ol start="6">
+<li>查看容器中正在运行的进程</li>
+</ol>
+<blockquote>
+<p>docker top [ 容器名 or 容器 id ]</p>
+</blockquote>
+<ol start="7">
+<li>将容器保存为镜像</li>
+</ol>
+<blockquote>
+<p>docker commit [ 容器名 or 容器 id ] [ 镜像名 ]:[ tag ]</p>
+</blockquote>
+<ol start="8">
+<li>使用 Dockerfile 构建镜像</li>
+</ol>
+<blockquote>
+<p>docker build -t [ 镜像名 ]:[ tag ] -f [ DockerFile 名 ] [ DockerFile 所在目录 ]</p>
+</blockquote>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>下面是我项目中的配置，可以作为参考</p>
+<p>gradle 配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line">// 放在最上面，优先级比较高</span><br><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        maven &#123;</span><br><span class="line">            url &quot;https://plugins.gradle.org/m2/&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &quot;gradle.plugin.com.arenagod.gradle:mybatis-generator-plugin:1.4&quot;</span><br><span class="line">        classpath &quot;org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    id &apos;java&apos;</span><br><span class="line">    id &quot;com.arenagod.gradle.MybatisGenerator&quot; version &quot;1.4&quot;</span><br><span class="line">    id &quot;org.sglahn.gradle-dockerfile-plugin&quot; version &quot;0.4&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">apply plugin: &apos;com.arenagod.gradle.MybatisGenerator&apos;</span><br><span class="line">apply plugin: &apos;jacoco&apos;</span><br><span class="line">apply plugin: &apos;java&apos;</span><br><span class="line">apply plugin: &apos;groovy&apos;</span><br><span class="line">apply plugin: &apos;org.springframework.boot&apos;</span><br><span class="line"></span><br><span class="line">group &apos;com.dxy&apos;</span><br><span class="line">version &apos;1.0&apos;</span><br><span class="line"></span><br><span class="line">jar &#123;</span><br><span class="line">    baseName = &apos;turbo&apos;</span><br><span class="line">    version = &apos;1.0&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sourceCompatibility = 1.8</span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    maven &#123;</span><br><span class="line">        url &quot;http://maven.aliyun.com/nexus/content/groups/public/&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sourceSets &#123;</span><br><span class="line">    main &#123;</span><br><span class="line">        java &#123;</span><br><span class="line">            srcDirs = []</span><br><span class="line">        &#125;</span><br><span class="line">        groovy &#123;</span><br><span class="line">            srcDirs = [&apos;src/main/groovy&apos;, &apos;src/main/java&apos;]</span><br><span class="line">        &#125;</span><br><span class="line">        test &#123;</span><br><span class="line">            java &#123;</span><br><span class="line">                srcDirs = []</span><br><span class="line">            &#125;</span><br><span class="line">            groovy &#123;</span><br><span class="line">                srcDirs = [&apos;src/test/groovy&apos;, &apos;src/test/java&apos;]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sourceCompatibility = 1.8</span><br><span class="line">targetCompatibility = 1.8</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile group: &apos;org.springframework.boot&apos;, name: &apos;spring-boot-starter-web&apos;, version: &apos;2.1.3.RELEASE&apos;</span><br><span class="line">    compile group: &apos;org.mybatis.spring.boot&apos;, name: &apos;mybatis-spring-boot-starter&apos;, version: &apos;2.0.0&apos;</span><br><span class="line">    compile group: &apos;org.springframework.boot&apos;, name: &apos;spring-boot-starter-data-jpa&apos;, version: &apos;2.1.3.RELEASE&apos;</span><br><span class="line">    testCompile group: &apos;org.springframework.boot&apos;, name: &apos;spring-boot-starter-test&apos;, version: &apos;2.1.3.RELEASE&apos;</span><br><span class="line">    compile group: &apos;com.alibaba&apos;, name: &apos;druid-spring-boot-starter&apos;, version: &apos;1.1.14&apos;</span><br><span class="line">    compile group: &apos;org.projectlombok&apos;, name: &apos;lombok&apos;, version: &apos;1.18.4&apos;</span><br><span class="line">    compile group: &apos;mysql&apos;, name: &apos;mysql-connector-java&apos;, version: &apos;5.1.47&apos;</span><br><span class="line">    compile group: &apos;io.springfox&apos;, name: &apos;springfox-swagger2&apos;, version: &apos;2.9.2&apos;</span><br><span class="line">    compile group: &apos;io.springfox&apos;, name: &apos;springfox-swagger-ui&apos;, version: &apos;2.9.2&apos;</span><br><span class="line">    // mybatis-generator core 包</span><br><span class="line">    compile group: &apos;org.mybatis.generator&apos;, name: &apos;mybatis-generator-core&apos;, version: &apos;1.3.7&apos;</span><br><span class="line">    compile group: &apos;com.alibaba&apos;, name: &apos;fastjson&apos;, version: &apos;1.2.56&apos;</span><br><span class="line">    compile group: &apos;com.google.code.gson&apos;, name: &apos;gson&apos;, version: &apos;2.8.5&apos;</span><br><span class="line">    compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-core&apos;, version: &apos;1.4.0&apos;</span><br><span class="line">    compile group: &apos;org.apache.shiro&apos;, name: &apos;shiro-spring&apos;, version: &apos;1.4.0&apos;</span><br><span class="line">    compile group: &apos;org.codehaus.groovy&apos;, name: &apos;groovy-all&apos;, version: &apos;2.5.6&apos;</span><br><span class="line">    // compile group: &apos;org.redisson&apos;, name: &apos;redisson-spring-boot-starter&apos;, version: &apos;3.10.5&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">configurations &#123;</span><br><span class="line">    mybatisGenerator</span><br><span class="line">&#125;</span><br><span class="line">// mybatis-generator.xml 配置路径</span><br><span class="line">mybatisGenerator &#123;</span><br><span class="line">    verbose = true</span><br><span class="line">    configFile = &apos;./src/main/resources/generatorConfig.xml&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//configuration</span><br><span class="line">docker &#123;</span><br><span class="line">    // Image version. Optional, default = project.version</span><br><span class="line">    //imageVersion = version</span><br><span class="line">    // Image name. Optional, default = project.name</span><br><span class="line">    imageName = &apos;turbo_docker&apos;</span><br><span class="line">    // Docker repository. Optional, default == no repository</span><br><span class="line">    // dockerRepository = &apos;sglahn&apos;</span><br><span class="line">    // Path or URL referring to the build context. Optional, default = $&#123;project.projectDir.getAbsolutePath()&#125;</span><br><span class="line">    // buildContext = &apos;build-context&apos;</span><br><span class="line">    // Path to the Dockerfile to use (relative to $&#123;project.projectDir&#125;). Optional, default = $&#123;buildContext&#125;/Dockerfile</span><br><span class="line">    dockerFile = &apos;Dockerfile&apos;</span><br><span class="line">    // Add a list of tags for an image. Optional, default = &apos;latest&apos;</span><br><span class="line">    //tags = [version, &apos;latest&apos;, &apos;Hello&apos;]</span><br><span class="line">    // Set metadata for an image. Optional, default = no label applied</span><br><span class="line">    //labels = [&apos;branch=master&apos;, &apos;mylabel=test&apos;]</span><br><span class="line">    // name and value of a buildarg. Optional, default = no build arguments</span><br><span class="line">    //buildArgs = [&apos;http_proxy=&quot;http://some.proxy.url&quot;&apos;]</span><br><span class="line">    // Always remove intermediate containers, even after unsuccessful builds. Optional, default = false</span><br><span class="line">    removeIntermediateContainers = true</span><br><span class="line">    // Isolation specifies the type of isolation technology used by containers. Optional, default = default</span><br><span class="line">    //isolation = &apos;default&apos;</span><br><span class="line">    // Do not use cache when building the image. Optional, default = false</span><br><span class="line">    //noCache = true</span><br><span class="line">    // Always attempt to pull a newer version of the image. Optional, default false</span><br><span class="line">    //pull = true</span><br><span class="line">    // Suppress the build output and print image ID on success. Optional, default = true</span><br><span class="line">    quiet = false</span><br><span class="line">    // Remove image in local repository after push to a remote repository, useful for builds on CI agents. Optional, default = false</span><br><span class="line">    //removeImagesAfterPush = true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">brew info gradle;</span><br><span class="line">brew upgrade gradle;</span><br><span class="line">// 如果报错，可以使用 gradle build dockerBuild 等命令</span><br><span class="line">gradle build docker</span><br><span class="line">// 运行命令，将容器内的  8080 端口映射到 127.0.0.1 的 8087 端口</span><br><span class="line">docker run -p 127.0.0.1:8087:8080 -t turbo_docker</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：需要主要项目中的端口号的映射，容器里的端口号和你实际运行的端口号不是一个概念，需要手动设置一下。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://www.jianshu.com/p/3cd9dbc165e9" target="_blank" rel="noopener">gradle 集成 dockerFile</a></li>
+<li><a href="https://www.jianshu.com/p/7571fa3b394c" target="_blank" rel="noopener">通过Gradle使用Docker部署 Spring Boot项目</a></li>
+<li><a href="https://www.jianshu.com/p/7c9e2247cfbd" target="_blank" rel="noopener">docker 常用命令</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/cd1d308.html" rel="next" title="类加载机制">
+                <i class="fa fa-chevron-left"></i> 类加载机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+      <div id="gitalk-container"></div>
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Zeusoul</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#命令"><span class="nav-number">1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像相关"><span class="nav-number">1.1.</span> <span class="nav-text">镜像相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像仓库相关"><span class="nav-number">1.1.1.</span> <span class="nav-text">镜像仓库相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地镜像"><span class="nav-number">1.1.2.</span> <span class="nav-text">本地镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器相关"><span class="nav-number">1.2.</span> <span class="nav-text">容器相关</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号"><span class="nav-number">2.</span> <span class="nav-text">关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号"><span class="nav-number">3.</span> <span class="nav-text">强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动容器"><span class="nav-number">4.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启容器"><span class="nav-number">5.</span> <span class="nav-text">重启容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">6.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zeusoul</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c04df7c69d5761801385',
+          clientSecret: '5fb09dba6d14aa370d23a46ad1d2ffec28532c57',
+          repo: 'zeusoul.github.io',
+          owner: 'zeusoul',
+          admin: ['zeusoul'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
