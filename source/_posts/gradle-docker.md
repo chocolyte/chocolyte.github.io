@@ -125,14 +125,26 @@ run 命令常用选项：
 
 3. 开启/停止/重启容器
 
-> # 关闭容器(发送SIGTERM信号,做一些'退出前工作',再发送SIGKILL信号)
+> 关闭容器(发送SIGTERM信号,做一些'退出前工作',再发送SIGKILL信号)
+>
+```
 docker stop anyesu-container
-# 强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)
+```
+
+> 强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)
+```
 docker kill anyesu-container
-# 启动容器
+```
+
+> 启动容器
+```
 docker start anyesu-container
-# 重启容器
+```
+
+> 重启容器
+```
 docker restart anyesu-container
+```
 
 4. 删除容器
 
