@@ -1,10 +1,11 @@
 ---
-title: hotspot-jvm
-date: 2019-03-29 13:52:44
-categories: 
-- 技术
-tags: 
+title: hotspot-jvm 垃圾收集器
+categories:
+  - 技术
+tags:
   - JVM
+abbrlink: 6a0a4ced
+date: 2019-03-29 13:52:44
 ---
 
 # 垃圾收集概念
