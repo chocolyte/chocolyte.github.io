@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令 命令镜像相关镜像仓库相关 查找镜像   docker search 【条件】  12## 查询 3 颗星及以上且名字包含 mysql 的镜像docker search -f=s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-19T04:04:36.526Z">
+<meta property="og:updated_time" content="2019-06-19T04:08:13.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker 结合 spring boot 项目运行">
 <meta name="twitter:description" content="这两天，想把自己的项目放到 docker 容器中运行，按照下面的步骤，你也能成功运行起来。这里是基于 gradle 配置的，maven 配置类似，如果是 maven 配置的也可以参考网上。首先看下 docker 常用的命令 命令镜像相关镜像仓库相关 查找镜像   docker search 【条件】  12## 查询 3 颗星及以上且名字包含 mysql 的镜像docker search -f=s">
@@ -516,11 +516,18 @@
 <li>开启/停止/重启容器</li>
 </ol>
 <blockquote>
-<h1 id="关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号"><a href="#关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号" class="headerlink" title="关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)"></a>关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)</h1><p>docker stop anyesu-container</p>
+<p>关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)</p>
 </blockquote>
-<h1 id="强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号"><a href="#强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号" class="headerlink" title="强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)"></a>强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)</h1><p>docker kill anyesu-container</p>
-<h1 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h1><p>docker start anyesu-container</p>
-<h1 id="重启容器"><a href="#重启容器" class="headerlink" title="重启容器"></a>重启容器</h1><p>docker restart anyesu-container</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop anyesu-container</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker kill anyesu-container</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>启动容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start anyesu-container</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>重启容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart anyesu-container</span><br></pre></td></tr></table></figure></p>
+</blockquote>
 <ol start="4">
 <li>删除容器</li>
 </ol>
@@ -734,7 +741,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#命令"><span class="nav-number">1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像相关"><span class="nav-number">1.1.</span> <span class="nav-text">镜像相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像仓库相关"><span class="nav-number">1.1.1.</span> <span class="nav-text">镜像仓库相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地镜像"><span class="nav-number">1.1.2.</span> <span class="nav-text">本地镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器相关"><span class="nav-number">1.2.</span> <span class="nav-text">容器相关</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关闭容器-发送SIGTERM信号-做一些’退出前工作’-再发送SIGKILL信号"><span class="nav-number">2.</span> <span class="nav-text">关闭容器(发送SIGTERM信号,做一些’退出前工作’,再发送SIGKILL信号)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#强制关闭容器-默认发送SIGKILL信号-加-s参数可以发送其他信号"><span class="nav-number">3.</span> <span class="nav-text">强制关闭容器(默认发送SIGKILL信号, 加-s参数可以发送其他信号)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动容器"><span class="nav-number">4.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启容器"><span class="nav-number">5.</span> <span class="nav-text">重启容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">6.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#命令"><span class="nav-number">1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像相关"><span class="nav-number">1.1.</span> <span class="nav-text">镜像相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像仓库相关"><span class="nav-number">1.1.1.</span> <span class="nav-text">镜像仓库相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地镜像"><span class="nav-number">1.1.2.</span> <span class="nav-text">本地镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器相关"><span class="nav-number">1.2.</span> <span class="nav-text">容器相关</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
