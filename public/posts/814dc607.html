@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JVM,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是一个很经典的问题，但是网上提供的答案容易误导别人。接下来通过详细说明和实例来看看实际情况是怎么样的。 错误答案的详细解释为了不让我们写 System 类，类加载采用委托机制，这样可以保证 parent 优先，parent 能找到的类，儿子就没有机会加载。而 System 类是 Bootstrap 加载器加载的，就算自己重写，也总是使用 Java 系统提供的 System，自己写的 System">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="能不能自己写个类叫 java.lang.System？">
+<meta property="og:url" content="http://peach.ren/posts/814dc607.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="这是一个很经典的问题，但是网上提供的答案容易误导别人。接下来通过详细说明和实例来看看实际情况是怎么样的。 错误答案的详细解释为了不让我们写 System 类，类加载采用委托机制，这样可以保证 parent 优先，parent 能找到的类，儿子就没有机会加载。而 System 类是 Bootstrap 加载器加载的，就算自己重写，也总是使用 Java 系统提供的 System，自己写的 System">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-18T06:55:45.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="能不能自己写个类叫 java.lang.System？">
+<meta name="twitter:description" content="这是一个很经典的问题，但是网上提供的答案容易误导别人。接下来通过详细说明和实例来看看实际情况是怎么样的。 错误答案的详细解释为了不让我们写 System 类，类加载采用委托机制，这样可以保证 parent 优先，parent 能找到的类，儿子就没有机会加载。而 System 类是 Bootstrap 加载器加载的，就算自己重写，也总是使用 Java 系统提供的 System，自己写的 System">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://peach.ren/posts/814dc607.html">
+
+
+
+
+
+  <title>能不能自己写个类叫 java.lang.System？ | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://peach.ren/posts/814dc607.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zeusoul">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">能不能自己写个类叫 java.lang.System？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-18T14:54:53+08:00">
+                2019-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是一个很经典的问题，但是网上提供的答案容易误导别人。接下来通过详细说明和实例来看看实际情况是怎么样的。</p>
+<h1 id="错误答案的详细解释"><a href="#错误答案的详细解释" class="headerlink" title="错误答案的详细解释"></a>错误答案的详细解释</h1><p>为了不让我们写 System 类，类加载采用委托机制，这样可以保证 parent 优先，parent 能找到的类，儿子就没有机会加载。而 System 类是 Bootstrap 加载器加载的，就算自己重写，也总是使用 Java 系统提供的 System，自己写的 System 类根本没有机会得到加载。但是，我们可以自己定义一个类加载器来达到这个目的，为了避免双亲委托机制，这个类加载器也必须是特殊的。由于系统自带的三个类加载器都加载特定目录下的类，如果我们自己的类加载器放在一个特殊的目录，那么系统的加载器就无法加载，也就是最终还是由我们自己的加载器加载。</p>
+<p>说明一下上面提到的一些概念：</p>
+<p>类加载器可分为两类：一是启动类加载器(Bootstrap ClassLoader)，是 C++ 实现的，是 JVM 的一部分；另一种是其它的类加载器，是 Java 实现的，独立于 JVM，全部都继承自抽象类 java.lang.ClassLoader。jdk 自带了三种类加载器，分别是启动类加载器（Bootstrap ClassLoader），扩展类加载器（Extension ClassLoader），应用程序类加载器（Application ClassLoader）。后两种加载器是继承自抽象类 java.lang.ClassLoader。</p>
+<h1 id="类加载器使用的原理"><a href="#类加载器使用的原理" class="headerlink" title="类加载器使用的原理"></a>类加载器使用的原理</h1><p>类加载器的加载过程一般是：自定义类加载器 &gt;&gt; 应用程序类加载器 &gt;&gt; 扩展类加载器 &gt;&gt; 启动类加载器。</p>
+<p>上面的层次关系被称为双亲委派模型(Parents Delegation Model)。除了最顶层的启动类加载器外，其余的类加载器都有对应的父类加载器。</p>
+<p>再简单说下双亲委托机制：如果一个类加载器收到了类加载的请求，它首先不会自己尝试去加载这个类，而是把这个请求委派给父类加载器，每一个层次的类加载器都是如此，因此所有的加载请求最终到达顶层的启动类加载器，只有当父类加载器反馈自己无法完成加载请求时（指它的搜索范围没有找到所需的类），子类加载器才会尝试自己去加载。</p>
+<p>再回去看下解释内容，我相信前面的部分大家应该很看懂了，也没什么大问题。最后的如果部分“如果我们自己的类加载器放在一个特殊的目录，那么系统的加载器就无法加载，也就是最终还是由我们自己的加载器加载。” ，逻辑完全不通。我想它的本意可能是，将自己的 java.lang.System 类放置在特殊目录，然后系统自带的加载器无法加载，这样最终还是由我们自己的加载器加载（因为我们自己的加载器知道其所在的特殊目录）。这种说法好像逻辑上没有问题，那么我们就来实验下了。</p>
+<h1 id="代码验证"><a href="#代码验证" class="headerlink" title="代码验证"></a>代码验证</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 自定义类加载器</span><br><span class="line">public class MyClassLoader extends ClassLoader&#123;</span><br><span class="line"></span><br><span class="line">    public MyClassLoader() &#123;</span><br><span class="line">        super(null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException &#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            String className = null;</span><br><span class="line">            if(name.startsWith(&quot;java.lang&quot;))&#123;</span><br><span class="line">                className = &quot;/&quot; + name.replace(&apos;.&apos;, &apos;/&apos;) + &quot;.class&quot;;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                className = name.substring(name.lastIndexOf(&apos;.&apos;) + 1) + &quot;.class&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(className);</span><br><span class="line">            InputStream is = getClass().getResourceAsStream(className);</span><br><span class="line">            System.out.println(is);</span><br><span class="line">            if(is == null)</span><br><span class="line">                return super.loadClass(name);</span><br><span class="line"></span><br><span class="line">            byte[] b = new byte[is.available()];</span><br><span class="line">            is.read(b);</span><br><span class="line">            return defineClass(name, b, 0, b.length);</span><br><span class="line">        &#125;catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            throw new ClassNotFoundException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Math 类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import java.lang</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public final class Math &#123;</span><br><span class="line">    </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(&quot;hello world&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class MyMath &#123;</span><br><span class="line">    </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(&quot;hello world&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ClassLoader 测试类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ClassLoaderTest &#123;</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException &#123;</span><br><span class="line">        ClassLoader myLoader = new MyClassLoader();</span><br><span class="line">        Object obj = myLoader.loadClass(&quot;java.lang.Math&quot;).newInstance();</span><br><span class="line">        System.out.println(obj);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的测试代码没用自定义java.lang.System类，因为测试代码用到了JDK自带的System类进行输出打印，会冲突，所以改用为自定义的java.lang.Math类。如果自定义的Math类能加载，那么自定义的System类同样能加载。</p>
+<p>我们先直接运行下 Math 类，输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误: 在类 java.lang.Math 中找不到 main 方法, 请将 main 方法定义为:</span><br><span class="line">   public static void main(String[] args)</span><br><span class="line">否则 JavaFX 应用程序类必须扩展javafx.application.Application</span><br></pre></td></tr></table></figure></p>
+<p>提示Math类没有 main 方法。首先大家要明白一个概念，当类首次主动使用时，必须进行类的加载，这部分工作是由类加载器来完成的。根据双亲委托原则，Math 类首先由启动类加载器去尝试加载，很显然，它找到 rt.jar 中的 java.lang.Math 类并加载进内存（并不会加载我们自定义的Math类），然后执行 main 方法时，发现不存在该方法，所以报方法不存在错误。也就是说，默认情况下 JVM 不会加载我们自定义的 Math 类。</p>
+<p>再直接运行MyMath类，输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">java.lang.SecurityException: Prohibited package name: java.lang</span><br><span class="line">at java.lang.ClassLoader.preDefineClass(ClassLoader.java:479)</span><br><span class="line">at java.lang.ClassLoader.defineClassCond(ClassLoader.java:625)</span><br><span class="line">at java.lang.ClassLoader.defineClass(ClassLoader.java:615)</span><br><span class="line">at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)</span><br><span class="line">at java.net.URLClassLoader.defineClass(URLClassLoader.java:283)</span><br><span class="line">at java.net.URLClassLoader.access$000(URLClassLoader.java:58)</span><br><span class="line">at java.net.URLClassLoader$1.run(URLClassLoader.java:197)</span><br><span class="line">at java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">at java.net.URLClassLoader.findClass(URLClassLoader.java:190)</span><br><span class="line">at java.lang.ClassLoader.loadClass(ClassLoader.java:306)</span><br><span class="line">at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)</span><br><span class="line">at java.lang.ClassLoader.loadClass(ClassLoader.java:247)</span><br><span class="line">Exception in thread &quot;main&quot;</span><br></pre></td></tr></table></figure>
+<p>由堆栈异常信息可知道，当应用程序类加载器类（AppClassLoader）尝试加载MyMath类时，ClassLoader.java的479行抛出了SecurityException。</p>
+<p><strong>禁止使用包名：java.lang。</strong></p>
+<p>直接查看抽象类 java.lang.ClassLoader 的 preDefineClass 方法代码，摘抄如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ProtectionDomain <span class="title">preDefineClass</span><span class="params">(String name,</span></span></span><br><span class="line"><span class="function"><span class="params">                                            ProtectionDomain pd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!checkName(name))</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoClassDefFoundError(<span class="string">"IllegalName: "</span> + name);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Note:  Checking logic in java.lang.invoke.MemberName.checkForTypeAlias</span></span><br><span class="line">    <span class="comment">// relies on the fact that spoofing is impossible if a class has a name</span></span><br><span class="line">    <span class="comment">// of the form "java.*"</span></span><br><span class="line">    <span class="keyword">if</span> ((name != <span class="keyword">null</span>) &amp;&amp; name.startsWith(<span class="string">"java."</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> SecurityException</span><br><span class="line">            (<span class="string">"Prohibited package name: "</span> +</span><br><span class="line">             name.substring(<span class="number">0</span>, name.lastIndexOf(<span class="string">'.'</span>)));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="keyword">null</span>) &#123;</span><br><span class="line">        pd = defaultDomain;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (name != <span class="keyword">null</span>) checkCerts(name, pd.getCodeSource());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到如果加载的类全名称以“java.”开头时，将会抛出SecurityException，这也是为什么直接执行MyMath类会出现 SecurityException。</p>
+<p>照这样，我们自定义的类加载器必须继承自ClassLoader，其loadClass()方法里调用了父类的defineClass()方法，并最终调到 preDefineClass() 方法，因此我们自定义的类加载器也是不能加载以 “java.” 开头的 java 类的。我们继续运行下 ClassLoaderTest 类，输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/java/lang/Math.class</span><br><span class="line">sun.net.www.protocol.jar.JarURLConnection$JarURLInputStream@a981ca</span><br><span class="line">java.lang.SecurityException: Prohibited package name: java.lang</span><br><span class="line">at java.lang.ClassLoader.preDefineClass(ClassLoader.java:479)</span><br><span class="line">at java.lang.ClassLoader.defineClassCond(ClassLoader.java:625)</span><br><span class="line">at java.lang.ClassLoader.defineClass(ClassLoader.java:615)</span><br><span class="line">at java.lang.ClassLoader.defineClass(ClassLoader.java:465)</span><br><span class="line">at com.tq.MyClassLoader.loadClass(MyClassLoader.java:28)</span><br><span class="line">at com.tq.ClassLoaderTest.main(ClassLoaderTest.java:8)</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.ClassNotFoundException</span><br><span class="line">at com.tq.MyClassLoader.loadClass(MyClassLoader.java:31)</span><br><span class="line">at com.tq.ClassLoaderTest.main(ClassLoaderTest.java:8)</span><br></pre></td></tr></table></figure>
+<p>通过代码实例及源码分析可以看到，对于自定义的类加载器，强行用defineClass()方法去加载一个以”java.”开头的类也是会抛出异常的。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>不能自己写以”java.”开头的类，其要么不能加载进内存，要么即使你用自定义的类加载器去强行加载，也会收到一个SecurityException。</strong></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://blog.csdn.net/tang9140/article/details/42738433" target="_blank" rel="noopener">java能不能自己写一个类叫java.lang.System/String正确答案</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/26e25788.html" rel="next" title="docker 结合 spring boot 项目运行">
+                <i class="fa fa-chevron-left"></i> docker 结合 spring boot 项目运行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+      <div id="gitalk-container"></div>
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Zeusoul</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#错误答案的详细解释"><span class="nav-number">1.</span> <span class="nav-text">错误答案的详细解释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载器使用的原理"><span class="nav-number">2.</span> <span class="nav-text">类加载器使用的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码验证"><span class="nav-number">3.</span> <span class="nav-text">代码验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zeusoul</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c04df7c69d5761801385',
+          clientSecret: '5fb09dba6d14aa370d23a46ad1d2ffec28532c57',
+          repo: 'zeusoul.github.io',
+          owner: 'zeusoul',
+          admin: ['zeusoul'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
