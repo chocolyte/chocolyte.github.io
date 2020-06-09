@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-09T07:55:46.264Z">
+<meta property="og:updated_time" content="2020-06-09T07:58:54.738Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSRF">
 <meta name="twitter:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
@@ -388,7 +388,6 @@
 <p>示例代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 验证 Referer</span></span><br><span class="line">String referer = WebUtil.getReferer(request);</span><br><span class="line"><span class="keyword">if</span> (StringUtil.isEmpty(referer)) &#123;</span><br><span class="line">       <span class="keyword">throw</span> <span class="keyword">new</span> RRException(Errors.EMPTY_REFERER);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!referer.contains(PathUtil.getUrlBase().toString())) &#123;</span><br><span class="line">       <span class="keyword">throw</span> <span class="keyword">new</span> RRException(Errors.ERROR_REFERER);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>token 验证可以参考 <a href="https://github.com/bdemers/shiro/blob/csrf-and-remember-me-with-JWT/web/src/main/java/org/apache/shiro/web/csrf/StatelessJwtCsrfTokenRepository.java" target="_blank" rel="noopener">shiro github</a></p>
-<p>和 aiderma 项目：<a href="https://gitlab.dxy.net/biz-Java/aiderma/tree/dev/src/main/java/com/dxy/modules/csrf" target="_blank" rel="noopener">csrf 模块</a></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单来说，CSRF 其实就是黑客利用浏览器存储用户 Cookie 这一特性，来模拟用户发起一次带有认证信息的请求，比如转账、修改密码等。防护 CSRF 的原理也很简单，在这些请求中，加入一些黑客无法得到的参数信息即可，比如 CSRF Token 或者独立的支付密码等。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://github.com/bdemers/shiro/blob/csrf-and-remember-me-with-JWT/web/src/main/java/org/apache/shiro/web/csrf/StatelessJwtCsrfTokenRepository.java" target="_blank" rel="noopener">shiro github</a></li>
