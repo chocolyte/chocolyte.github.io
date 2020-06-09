@@ -87,10 +87,13 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-09T07:58:54.738Z">
+<meta property="og:image" content="https://file.peach.ren/2020/06/csrf-process.png/s">
+<meta property="og:image" content="https://file.peach.ren/2020/06/csrf-process-1.png/s">
+<meta property="og:updated_time" content="2020-06-09T08:35:31.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSRF">
 <meta name="twitter:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
+<meta name="twitter:image" content="https://file.peach.ren/2020/06/csrf-process.png/s">
 
 
 
@@ -374,7 +377,9 @@
 <li><p>这时候A网站肯定是不知道这个请求其实是小强伪造的网页上发送的，而是误以为小明就是要这样操作，这样小强就可以随意的更改小明在A上的信息，以小明的身份在A网站上进行操作</p>
 </li>
 </ol>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="Synchronizer-token-pattern"><a href="#Synchronizer-token-pattern" class="headerlink" title="Synchronizer token pattern"></a>Synchronizer token pattern</h2><p>令牌同步模式（Synchronizer token pattern，简称STP）是在用户请求的页面中的所有表单中嵌入一个token，在服务端验证这个token的技术。token可以是任意的内容，但是一定要保证无法被攻击者猜测到或者查询到。攻击者在请求中无法使用正确的token，因此可以判断出未授权的请求。</p>
+<p>整个过程大概如图所示：<br><img src="https://file.peach.ren/2020/06/csrf-process.png/s" alt="image"></p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p><img src="https://file.peach.ren/2020/06/csrf-process-1.png/s" alt="image"></p>
+<h2 id="Synchronizer-token-pattern"><a href="#Synchronizer-token-pattern" class="headerlink" title="Synchronizer token pattern"></a>Synchronizer token pattern</h2><p>令牌同步模式（Synchronizer token pattern，简称STP）是在用户请求的页面中的所有表单中嵌入一个token，在服务端验证这个token的技术。token可以是任意的内容，但是一定要保证无法被攻击者猜测到或者查询到。攻击者在请求中无法使用正确的token，因此可以判断出未授权的请求。</p>
 <h2 id="Cookie-to-Header-Token"><a href="#Cookie-to-Header-Token" class="headerlink" title="Cookie-to-Header Token"></a>Cookie-to-Header Token</h2><p>对于使用Js作为主要交互技术的网站，将CSRF的token写入到cookie中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: CSRF-token=i8XNjC4b8KVok4uw5RftR38Wgp2BFwql; expires=Thu, 23-Jul-2015 10:25:33 GMT; Max-Age=31449600; Path=/</span><br></pre></td></tr></table></figure></p>
 <p>然后使用javascript读取token的值，在发送http请求的时候将其作为请求的header</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-CSRF-Token: i8XNjC4b8KVok4uw5RftR38Wgp2BFwql</span><br></pre></td></tr></table></figure>
