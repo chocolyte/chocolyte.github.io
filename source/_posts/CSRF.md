@@ -32,7 +32,12 @@ CSRF能够做的事情包括：以你名义发送邮件，发消息，盗取你�
 
 5. 这时候A网站肯定是不知道这个请求其实是小强伪造的网页上发送的，而是误以为小明就是要这样操作，这样小强就可以随意的更改小明在A上的信息，以小明的身份在A网站上进行操作
 
+整个过程大概如图所示：
+![image](https://file.peach.ren/2020/06/csrf-process.png/s)
+
 # 解决方案
+![image](https://file.peach.ren/2020/06/csrf-process-1.png/s)
+
 ## Synchronizer token pattern
 令牌同步模式（Synchronizer token pattern，简称STP）是在用户请求的页面中的所有表单中嵌入一个token，在服务端验证这个token的技术。token可以是任意的内容，但是一定要保证无法被攻击者猜测到或者查询到。攻击者在请求中无法使用正确的token，因此可以判断出未授权的请求。
 
@@ -81,8 +86,6 @@ if (!referer.contains(PathUtil.getUrlBase().toString())) {
 ```
 
 token 验证可以参考 [shiro github](https://github.com/bdemers/shiro/blob/csrf-and-remember-me-with-JWT/web/src/main/java/org/apache/shiro/web/csrf/StatelessJwtCsrfTokenRepository.java)
-
-和 aiderma 项目：[csrf 模块](https://gitlab.dxy.net/biz-Java/aiderma/tree/dev/src/main/java/com/dxy/modules/csrf)
 
 # 总结
 简单来说，CSRF 其实就是黑客利用浏览器存储用户 Cookie 这一特性，来模拟用户发起一次带有认证信息的请求，比如转账、修改密码等。防护 CSRF 的原理也很简单，在这些请求中，加入一些黑客无法得到的参数信息即可，比如 CSRF Token 或者独立的支付密码等。
