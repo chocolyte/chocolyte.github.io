@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
+<meta name="description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的 Web 应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网">
 <meta name="keywords" content="安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSRF">
 <meta property="og:url" content="http://peach.ren/posts/d12d6355.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
+<meta property="og:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的 Web 应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://file.peach.ren/2020/06/csrf-process.png/s">
 <meta property="og:image" content="https://file.peach.ren/2020/06/csrf-process-1.png/s">
-<meta property="og:updated_time" content="2020-06-09T08:35:31.224Z">
+<meta property="og:updated_time" content="2020-06-10T06:29:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSRF">
-<meta name="twitter:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏">
+<meta name="twitter:description" content="CSRF 攻击是什么？CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的 Web 应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网">
 <meta name="twitter:image" content="https://file.peach.ren/2020/06/csrf-process.png/s">
 
 
@@ -355,7 +355,7 @@
       
 
       
-        <h1 id="CSRF-攻击是什么？"><a href="#CSRF-攻击是什么？" class="headerlink" title="CSRF 攻击是什么？"></a>CSRF 攻击是什么？</h1><p>CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
+        <h1 id="CSRF-攻击是什么？"><a href="#CSRF-攻击是什么？" class="headerlink" title="CSRF 攻击是什么？"></a>CSRF 攻击是什么？</h1><p>CSRF：跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的 Web 应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
 <p>CSRF能够做的事情包括：以你名义发送邮件，发消息，盗取你的账号，甚至于购买商品，虚拟货币转账……造成的问题包括：个人隐私泄露以及财产安全。例如通过QQ等聊天软件发送的链接(有些还伪装成短域名，用户无法分辨)，攻击者就能迫使Web应用的用户去执行攻击者预设的操作。例如，当用户登录网络银行去查看其存款余额，在他没有退出时，就点击了一个QQ好友发来的链接，那么该用户银行帐户中的资金就有可能被转移到攻击者指定的帐户中。</p>
 <h1 id="CSRF-原理"><a href="#CSRF-原理" class="headerlink" title="CSRF 原理"></a>CSRF 原理</h1><p>要完成一个CSRF攻击，必须具备以下几个条件：</p>
 <ul>
@@ -379,14 +379,14 @@
 </ol>
 <p>整个过程大概如图所示：<br><img src="https://file.peach.ren/2020/06/csrf-process.png/s" alt="image"></p>
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p><img src="https://file.peach.ren/2020/06/csrf-process-1.png/s" alt="image"></p>
-<h2 id="Synchronizer-token-pattern"><a href="#Synchronizer-token-pattern" class="headerlink" title="Synchronizer token pattern"></a>Synchronizer token pattern</h2><p>令牌同步模式（Synchronizer token pattern，简称STP）是在用户请求的页面中的所有表单中嵌入一个token，在服务端验证这个token的技术。token可以是任意的内容，但是一定要保证无法被攻击者猜测到或者查询到。攻击者在请求中无法使用正确的token，因此可以判断出未授权的请求。</p>
-<h2 id="Cookie-to-Header-Token"><a href="#Cookie-to-Header-Token" class="headerlink" title="Cookie-to-Header Token"></a>Cookie-to-Header Token</h2><p>对于使用Js作为主要交互技术的网站，将CSRF的token写入到cookie中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: CSRF-token=i8XNjC4b8KVok4uw5RftR38Wgp2BFwql; expires=Thu, 23-Jul-2015 10:25:33 GMT; Max-Age=31449600; Path=/</span><br></pre></td></tr></table></figure></p>
-<p>然后使用javascript读取token的值，在发送http请求的时候将其作为请求的header</p>
+<h2 id="Synchronizer-token-pattern"><a href="#Synchronizer-token-pattern" class="headerlink" title="Synchronizer token pattern"></a>Synchronizer token pattern</h2><p>令牌同步模式（Synchronizer token pattern，简称STP）是在用户请求的页面中的所有表单中嵌入一个 token，在服务端验证这个 token 的技术。token 可以是任意的内容，但是一定要保证无法被攻击者猜测到或者查询到。攻击者在请求中无法使用正确的 token，因此可以判断出未授权的请求。</p>
+<h2 id="Cookie-to-Header-Token"><a href="#Cookie-to-Header-Token" class="headerlink" title="Cookie-to-Header Token"></a>Cookie-to-Header Token</h2><p>对于使用 Js 作为主要交互技术的网站，将 CSRF 的 token 写入到 cookie 中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: CSRF-token=i8XNjC4b8KVok4uw5RftR38Wgp2BFwql; expires=Thu, 23-Jul-2015 10:25:33 GMT; Max-Age=31449600; Path=/</span><br></pre></td></tr></table></figure></p>
+<p>然后使用 javascript 读取 token 的值，在发送 http 请求的时候将其作为请求的 header</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-CSRF-Token: i8XNjC4b8KVok4uw5RftR38Wgp2BFwql</span><br></pre></td></tr></table></figure>
 <p>最后服务器验证请求头的 token 是否合法。</p>
 <h2 id="二次验证"><a href="#二次验证" class="headerlink" title="二次验证"></a>二次验证</h2><p>如用户付账输入密码，短信验证码验证等</p>
-<h2 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h2><p>使用验证码可以杜绝CSRF攻击，但是这种方式要求每个请求都输入一个验证码，显然没有哪个网站愿意使用这种粗暴的方式，用户体验太差，用户会疯掉的。</p>
-<h2 id="验证-Referer"><a href="#验证-Referer" class="headerlink" title="验证 Referer"></a>验证 Referer</h2><p>HTTP头中的Referer字段记录了该 HTTP 请求的来源地址。在通常情况下，访问一个安全受限页面的请求来自于同一个网站，而如果黑客要对其实施 CSRF 攻击，他一般只能在他自己的网站构造请求。因此，可以通过验证 Referer 值来防御 CSRF 攻击。</p>
+<h2 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h2><p>使用验证码可以杜绝 CSRF 攻击，但是这种方式要求每个请求都输入一个验证码，显然没有哪个网站愿意使用这种粗暴的方式，用户体验太差，用户会疯掉的。</p>
+<h2 id="验证-Referer"><a href="#验证-Referer" class="headerlink" title="验证 Referer"></a>验证 Referer</h2><p>HTTP 头中的 Referer 字段记录了该 HTTP 请求的来源地址。在通常情况下，访问一个安全受限页面的请求来自于同一个网站，而如果黑客要对其实施 CSRF 攻击，他一般只能在他自己的网站构造请求。因此，可以通过验证 Referer 值来防御 CSRF 攻击。</p>
 <p>然而，这种方法并非万无一失。Referer 的值是由浏览器提供的，虽然 HTTP 协议上有明确的要求，但是每个浏览器对于 Referer 的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障，从理论上来讲，这样并不安全。事实上，对于某些浏览器，比如 IE6 或 FF2，目前已经有一些方法可以篡改 Referer 值。如果 bank.example 网站支持 IE6 浏览器，黑客完全可以把用户浏览器的 Referer 值设为以 bank.example 域名开头的地址，这样就可以通过验证，从而进行 CSRF 攻击。</p>
 <p>即便是使用最新的浏览器，黑客无法篡改 Referer 值，这种方法仍然有问题。因为 Referer 值会记录下用户的访问来源，有些用户认为这样会侵犯到他们自己的隐私权，特别是有些组织担心 Referer 值会把组织内网中的某些信息泄露到外网中。因此，用户自己可以设置浏览器使其在发送请求时不再提供 Referer。当他们正常访问银行网站时，网站会因为请求没有 Referer 值而认为是 CSRF 攻击，拒绝合法用户的访问。</p>
 <h1 id="Java-项目实践"><a href="#Java-项目实践" class="headerlink" title="Java 项目实践"></a>Java 项目实践</h1><p>目前项目中采取的是 Referer 和 Cookie-to-Header 同时验证的方式</p>
