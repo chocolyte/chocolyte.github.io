@@ -7,7 +7,7 @@ title: Blog
 subtitle:
 description:
 keywords:
-author: Zeusoul
+author: Chocolyte
 language: zh-CN
 timezone: 
 
@@ -85,5 +85,5 @@ theme: inext
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: git@github.com:zeusoul/zeusoul.github.io.git
+  repository: git@github.com:chocolyte/chocolyte.github.io.git
   branch: master
